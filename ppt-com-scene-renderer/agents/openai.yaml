@@ -1,4 +1,4 @@
 interface:
   display_name: "PPT COM Scene Renderer"
-  short_description: "Plan and render editable PPT figures via PowerPoint COM."
-  default_prompt: "Use $ppt-com-scene-renderer to design or recreate this figure as an editable PowerPoint diagram."
+  short_description: "Vision-plan and render editable PPT figures via PowerPoint COM."
+  default_prompt: "Use $ppt-com-scene-renderer to analyze, plan, design, or recreate this figure as an editable PowerPoint diagram."

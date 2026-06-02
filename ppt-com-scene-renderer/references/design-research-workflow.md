@@ -2,14 +2,17 @@
 
 Use this reference when the user asks for an original PPT figure from a text description, asks for Nature/Science-style inspiration, or wants a figure designed before rendering.
 
+For tasks with supplied images, read `vision-planning-workflow.md` first and use the resulting `vision-analysis.md` as an input to the design plan. For text-only tasks, Vision is not required unless a rendered preview image is being checked.
+
 ## Required Flow
 
 1. Clarify only high-impact missing intent. Otherwise proceed with reasonable assumptions.
-2. Research visual references when the request calls for inspiration, benchmarking, current examples, or journal/design style.
-3. Extract abstract patterns, not source content.
-4. Write a `Figure Design Plan`.
-5. Wait for user confirmation before rendering unless the user explicitly asks to generate directly.
-6. Convert the approved design into `scene.json`, local assets, PPTX, and preview.
+2. If images are supplied, complete Vision analysis before design planning.
+3. Research visual references when the request calls for inspiration, benchmarking, current examples, or journal/design style.
+4. Extract abstract patterns, not source content.
+5. Write a `Figure Design Plan`.
+6. Wait for user confirmation before rendering unless the user explicitly asks to generate directly.
+7. Convert the approved design into `scene.json`, local assets, PPTX, and preview.
 
 ## Reference Research
 
@@ -69,6 +72,12 @@ Save this as `output/<task-name>/design-plan.md` when the task is description-dr
 - Patterns intentionally avoided:
 - Originality/differentiation notes:
 
+## Vision-Derived Structure
+- Source images analyzed:
+- Main detected structure:
+- Elements to preserve:
+- Elements to reinterpret:
+
 ## Layout
 - Canvas and aspect ratio:
 - Main regions:
@@ -95,6 +104,11 @@ Save this as `output/<task-name>/design-plan.md` when the task is description-dr
 - PPTX path:
 - Preview path:
 - Known risks:
+
+## Preview QA Findings
+- Preview image checked:
+- Issues found:
+- Scene-level corrections:
 ```
 
 ## Inspiration Notes Template
@@ -117,13 +131,14 @@ Save this as `output/<task-name>/inspiration-notes.md`. Keep it internal unless 
 
 ## Handoff to Scene JSON
 
+- If `vision-analysis.md` exists, use it as the structural source of truth before external references.
 - Start from the approved design plan, not directly from external references.
 - Map each layout region to `group` elements when it improves editability.
 - Use theme tokens for repeated colors, fonts, and stroke widths.
 - Use built-in components for repeated step circles, skill cards, legends, brackets, and flow arrows.
 - Use `freeform`/`bezier` for smooth connectors and curved callouts.
 - Use `svg`/`emf` for crisp vector icons when available; use `image` for generated raster assets.
-- Export a preview with `-ExportPreview` and compare it against the approved design plan.
+- Export a preview with `-ExportPreview` and compare it against the approved design plan. If a reference image or prior plan exists, run Vision QA and record corrections.
 
 ## Network-Unavailable Fallback
 

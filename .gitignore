@@ -1,0 +1,13 @@
+# OS and editor noise
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+*.bak
+*.bak.*
+
+# Local generated outputs
+output/
+*/output/
+.vendor/
+*/.vendor/

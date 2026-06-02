@@ -1,0 +1,220 @@
+{
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "slides": [
+    {
+      "background": "#F7F9FC",
+      "elements": [
+        {
+          "id": "title",
+          "type": "text",
+          "x": 70,
+          "y": 34,
+          "w": 800,
+          "h": 44,
+          "text": "PowerPoint COM Grid Structure Demo",
+          "fontSize": 28,
+          "fontFace": "Arial",
+          "bold": true,
+          "color": "#1F2933",
+          "align": "left"
+        },
+        {
+          "id": "subtitle",
+          "type": "text",
+          "x": 72,
+          "y": 78,
+          "w": 740,
+          "h": 28,
+          "text": "All boxes, lines, arrows, and labels are native editable PowerPoint shapes.",
+          "fontSize": 14,
+          "fontFace": "Arial",
+          "color": "#52616F",
+          "align": "left"
+        },
+        {
+          "id": "cell-1-1",
+          "type": "rect",
+          "x": 120,
+          "y": 150,
+          "w": 150,
+          "h": 82,
+          "fill": "#EAF2FF",
+          "stroke": "#3A6EA5",
+          "strokeWidth": 2,
+          "radius": 10,
+          "text": "Input A",
+          "fontSize": 17,
+          "bold": true,
+          "color": "#1F3B57"
+        },
+        {
+          "id": "cell-1-2",
+          "type": "rect",
+          "x": 300,
+          "y": 150,
+          "w": 150,
+          "h": 82,
+          "fill": "#EAF2FF",
+          "stroke": "#3A6EA5",
+          "strokeWidth": 2,
+          "radius": 10,
+          "text": "Input B",
+          "fontSize": 17,
+          "bold": true,
+          "color": "#1F3B57"
+        },
+        {
+          "id": "cell-1-3",
+          "type": "rect",
+          "x": 480,
+          "y": 150,
+          "w": 150,
+          "h": 82,
+          "fill": "#EAF2FF",
+          "stroke": "#3A6EA5",
+          "strokeWidth": 2,
+          "radius": 10,
+          "text": "Mixer",
+          "fontSize": 17,
+          "bold": true,
+          "color": "#1F3B57"
+        },
+        {
+          "id": "cell-2-1",
+          "type": "rect",
+          "x": 120,
+          "y": 264,
+          "w": 150,
+          "h": 82,
+          "fill": "#F4FBF2",
+          "stroke": "#4E8F4A",
+          "strokeWidth": 2,
+          "radius": 10,
+          "text": "Filter",
+          "fontSize": 17,
+          "bold": true,
+          "color": "#245724"
+        },
+        {
+          "id": "cell-2-2",
+          "type": "rect",
+          "x": 300,
+          "y": 264,
+          "w": 150,
+          "h": 82,
+          "fill": "#F4FBF2",
+          "stroke": "#4E8F4A",
+          "strokeWidth": 2,
+          "radius": 10,
+          "text": "Buffer",
+          "fontSize": 17,
+          "bold": true,
+          "color": "#245724"
+        },
+        {
+          "id": "cell-2-3",
+          "type": "rect",
+          "x": 480,
+          "y": 264,
+          "w": 150,
+          "h": 82,
+          "fill": "#F4FBF2",
+          "stroke": "#4E8F4A",
+          "strokeWidth": 2,
+          "radius": 10,
+          "text": "Output",
+          "fontSize": 17,
+          "bold": true,
+          "color": "#245724"
+        },
+        {
+          "id": "arrow-a-to-b",
+          "type": "line",
+          "x1": 270,
+          "y1": 191,
+          "x2": 300,
+          "y2": 191,
+          "stroke": "#1F2933",
+          "strokeWidth": 2.5,
+          "arrowEnd": true
+        },
+        {
+          "id": "arrow-b-to-mixer",
+          "type": "line",
+          "x1": 450,
+          "y1": 191,
+          "x2": 480,
+          "y2": 191,
+          "stroke": "#1F2933",
+          "strokeWidth": 2.5,
+          "arrowEnd": true
+        },
+        {
+          "id": "dashed-feedback",
+          "type": "polyline",
+          "points": [
+            { "x": 555, "y": 346 },
+            { "x": 555, "y": 408 },
+            { "x": 195, "y": 408 },
+            { "x": 195, "y": 346 }
+          ],
+          "stroke": "#9A6A00",
+          "strokeWidth": 2,
+          "dash": "dash",
+          "arrowEnd": true
+        },
+        {
+          "id": "highlight-node",
+          "type": "ellipse",
+          "x": 742,
+          "y": 164,
+          "w": 110,
+          "h": 110,
+          "fill": "#FFF3D6",
+          "stroke": "#C88719",
+          "strokeWidth": 2,
+          "text": "Node",
+          "fontSize": 18,
+          "bold": true,
+          "color": "#5B3A00"
+        },
+        {
+          "id": "sample-icon",
+          "type": "image",
+          "x": 898,
+          "y": 166,
+          "w": 120,
+          "h": 120,
+          "path": "assets/generated/sample-icon.png"
+        },
+        {
+          "id": "image-label",
+          "type": "text",
+          "x": 858,
+          "y": 296,
+          "w": 210,
+          "h": 30,
+          "text": "Inserted local PNG asset",
+          "fontSize": 14,
+          "fontFace": "Arial",
+          "color": "#52616F",
+          "align": "center"
+        },
+        {
+          "id": "connection-to-icon",
+          "type": "line",
+          "x1": 852,
+          "y1": 219,
+          "x2": 898,
+          "y2": 226,
+          "stroke": "#C88719",
+          "strokeWidth": 2.5,
+          "arrowEnd": "triangle"
+        }
+      ]
+    }
+  ]
+}

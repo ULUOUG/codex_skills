@@ -1,4 +1,4 @@
 interface:
   display_name: "PPT COM Scene Renderer"
-  short_description: "Vision-plan and render editable PPT figures via PowerPoint COM."
-  default_prompt: "Use $ppt-com-scene-renderer to analyze, plan, design, or recreate this figure as an editable PowerPoint diagram."
+  short_description: "Produce editable .pptx figures (shapes, arrows, text — all editable in PowerPoint) via JSON scene + PowerPoint COM."
+  default_prompt: "Use $ppt-com-scene-renderer to produce an editable .pptx for this request — every shape, arrow, and label must stay editable in PowerPoint. Follow the typography scale; do not default to small fonts."

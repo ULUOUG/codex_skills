@@ -1,6 +1,6 @@
 # Description-Driven Figure Design Workflow
 
-Use this reference when the user asks for an original PPT figure from a text description, asks for Nature/Science-style inspiration, or wants a figure designed before rendering.
+Read this when the user asks for an original PPT figure from a text description, or wants a figure designed before rendering.
 
 For tasks with supplied images, read `vision-planning-workflow.md` first and use the resulting `vision-analysis.md` as an input to the design plan. For text-only tasks, Vision is not required unless a rendered preview image is being checked.
 
@@ -8,15 +8,26 @@ For tasks with supplied images, read `vision-planning-workflow.md` first and use
 
 1. Clarify only high-impact missing intent. Otherwise proceed with reasonable assumptions.
 2. If images are supplied, complete Vision analysis before design planning.
-3. Research visual references when the request calls for inspiration, benchmarking, current examples, or journal/design style.
-4. Extract abstract patterns, not source content.
+3. **Decide whether reference research is triggered** (see *Reference Research Trigger* below). Skip it by default; do not search Nature / Science / design galleries unless the user explicitly asked for inspiration or benchmarking.
+4. If triggered, extract abstract patterns, not source content.
 5. Write a `Figure Design Plan`.
-6. Wait for user confirmation before rendering unless the user explicitly asks to generate directly.
+6. Wait for user confirmation before rendering, unless the user explicitly said "直接生成 / no confirmation / skip plan".
 7. Convert the approved design into `scene.json`, local assets, PPTX, and preview.
 
-## Reference Research
+## Reference Research Trigger
 
-Default reference scope:
+| User input | Run reference research? |
+| --- | --- |
+| Supplied reference image(s) + "redraw / recreate this" | **No** — Vision analysis is enough |
+| Text-only description, no inspiration keywords | **No** — design from description + local knowledge |
+| Text or image task that explicitly mentions one of: "参考 / 灵感 / Nature 风 / Science 风 / 设计网站 / benchmark / find inspiration / look up references / 参考某某期刊" | **Yes** — follow *Reference Research Scope* below |
+| Any task when web access is unavailable | **No** — note "reference research not performed" and continue |
+
+The default is **no research**. Searching when the user did not ask for it wastes time and risks contaminating the design with unrelated visual styles.
+
+## Reference Research Scope
+
+When triggered, the default scope is:
 
 - Scholarly figures: Nature, Nature sub-journals, Science, Science sub-journals, and related publisher pages.
 - Design references: credible design galleries, data visualization portfolios, editorial/scientific illustration examples, product/system diagram examples, and design-system documentation.

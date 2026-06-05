@@ -35,6 +35,35 @@ Use this reference when authoring scenes for `scripts/Render-PptScene.ps1`.
 
 Scene files must be UTF-8. Colors must be `#RRGGBB`, `none`, or `transparent`.
 
+## Coordinate System
+
+- **Origin: top-left** of the canvas (PowerPoint convention).
+- **X grows to the right; Y grows downward.**
+- All `x`, `y`, `w`, `h`, `x1/y1/x2/y2`, and `points[].x/y` are in **logical canvas units** (the values in `canvas.width` / `canvas.height`).
+- The renderer maps logical units → PowerPoint points using the `page` size at render time, so layouts written for `1280 × 720` keep their proportions when `page` is `960 × 540` (default) or anything else.
+- `fontSize` is in **points** (PowerPoint native), not logical units. See *Typography Scale* below for the scaling rule when canvas size changes.
+
+## Typography Scale
+
+Default canvas is `1280 × 720`. The following font sizes are the **floors** at that canvas; do not go smaller without a specific reason. Picking a smaller value than the floor is the most common defect — when in doubt, choose the higher end of each range.
+
+| Role | fontSize (pt) | Notes |
+| --- | --- | --- |
+| Slide title | **36 – 44** | One per slide, bold |
+| Section / region title | **24 – 30** | Subgroup headers, swimlane titles |
+| Node / card label | **18 – 22** | Text inside flow boxes, cards, chips |
+| Body / description | **16 – 18** | Paragraph text, longer captions |
+| Annotation / legend | **14 – 16** | **Lower bound — do not go below 14** |
+| Source / footer | **12 – 14** | Citations, page footers only |
+
+Rules that override the table:
+
+- **If a node box has `w < 200` or `h < 60`, its label fontSize must be ≥ 18.** Small boxes still need readable labels.
+- **If text would overflow, enlarge the container first; do not shrink the font.**
+- **Scaling for non-default canvas sizes:** multiply the table values by `canvas.width / 1280`. For example, on a `1920 × 1080` canvas a node label is `18 × 1.5 = 27` pt minimum.
+- For portrait/poster canvases, use the longer side as the scaling reference (`max(canvas.width, canvas.height) / 1280`).
+- `bold: true` for titles and one-word emphasis only; do not bold body text by default.
+
 For a portrait figure, use matching ratios:
 
 ```json
@@ -83,13 +112,13 @@ Text alignment:
   "strokeWidth": 2,
   "radius": 10,
   "text": "Input A",
-  "fontSize": 16,
+  "fontSize": 20,
   "bold": true,
   "color": "#1F3B57"
 }
 ```
 
-Use `radius > 0` for rounded rectangles.
+Use `radius > 0` for rounded rectangles. `fontSize` follows the *Typography Scale* table above (node labels: 18–22 pt at 1280×720).
 
 ### `ellipse`
 
@@ -187,7 +216,7 @@ Set `"closed": true` to close and optionally fill a path.
   "w": 800,
   "h": 44,
   "text": "Grid Structure Demo",
-  "fontSize": 28,
+  "fontSize": 40,
   "fontFace": "Arial",
   "bold": true,
   "color": "#1F2933",
@@ -195,7 +224,7 @@ Set `"closed": true` to close and optionally fill a path.
 }
 ```
 
-Use explicit `w` and `h` large enough for the text; PowerPoint will wrap text inside the text box.
+Use explicit `w` and `h` large enough for the text; PowerPoint will wrap text inside the text box. Slide titles should be 36–44 pt at 1280×720 — see *Typography Scale* above.
 
 ### `image`
 

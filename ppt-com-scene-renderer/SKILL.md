@@ -1,6 +1,6 @@
 ---
 name: ppt-com-scene-renderer
-description: Create editable PowerPoint diagrams from rough reference images, mixed visual sources, text-only figure descriptions, preview images, or JSON scene descriptions using Vision-assisted planning and Microsoft PowerPoint COM automation. Use when the user wants to analyze a reference image, recreate an image in PPT, combine elements from multiple images into one slide, plan an original scientific or design-style figure from a description, research visual inspiration without copying, generate grid/network/structure diagrams, insert generated raster icons where PPT native shapes are insufficient, QA a generated PPT preview image, or watch PowerPoint draw elements live.
+description: Use whenever the user wants an editable PowerPoint (.pptx) figure, diagram, or slide — including "给我/输出/生成/做一个可编辑的 PPT"、"画一张 PPT 图"、"PPT 示意图/流程图/架构图/网络图/框架图/概念图"、"editable PPT/PPTX"、"make a PowerPoint diagram"、"draw this in PPT". Produces a real .pptx via JSON scene + PowerPoint COM, so every shape, arrow, and label stays editable in PowerPoint. Also covers recreating a reference image as a PPT figure, composing elements from multiple images into one slide, designing an original scientific or design-style figure from a text description (with optional reference research when the user explicitly asks for it), inserting generated raster/SVG/EMF assets where native PPT shapes fall short, QA-ing a rendered preview image, and live-drawing mode where the user watches PowerPoint build the slide. SKIP for plain text-only decks with no diagram intent, for read-only image export (PNG/SVG only with no .pptx requested), or when the user explicitly asks to edit an existing .pptx file in place.
 ---
 
 # PPT COM Scene Renderer
@@ -13,7 +13,7 @@ Supported input modes:
 
 - Single-image recreation: reproduce the supplied reference as an editable PPT figure.
 - Multi-image composition: take selected elements from several images and unify them into one figure.
-- Description-driven original design: start from a text description, research visual inspiration, create a figure design plan, then render the final editable PPT.
+- Description-driven original design: start from a text description, create a Figure Design Plan, optionally research visual inspiration **only when the user explicitly asks for it**, then render the final editable PPT.
 - Preview QA: inspect a rendered preview image and identify corrections before finalizing the PPT.
 
 Bundled resources:
@@ -27,40 +27,37 @@ Bundled resources:
 ## Workflow
 
 1. Classify the input mode.
-   - For a supplied image, use single-image recreation.
-   - For multiple supplied images, use multi-image composition and identify which elements come from each image.
-   - For a text-only request or a request for an original figure, use description-driven original design and read `references/design-research-workflow.md`.
-   - For a rendered preview image, use preview QA.
-2. Run Vision analysis when images are involved.
-   - For single-image recreation, read `references/vision-planning-workflow.md` and create `vision-analysis.md` before writing `scene.json`.
-   - For multi-image composition, create one Vision analysis per source image, then summarize selected elements, style conflicts, and the unified composition.
-   - For preview QA, compare `preview.png` against the reference image, `vision-analysis.md`, or `design-plan.md`; list concrete fixes before rerendering.
-   - Vision only analyzes and plans. It does not replace `scripts/Render-PptScene.ps1` or any PPTX renderer.
-3. For description-driven original design, produce a `Figure Design Plan` before writing `scene.json` unless the user explicitly asks to generate the PPT directly.
-   - Search scholarly and design references when the user asks for research, current inspiration, Nature/Science-style figures, or broad visual benchmarking.
-   - Extract only abstract design patterns: information hierarchy, layout grammar, visual rhythm, color role, annotation strategy, and storytelling flow.
-   - Do not copy, trace, screenshot, reuse, or closely imitate external figures, icons, illustrations, palettes, or text placement.
-   - Keep an internal `inspiration-notes.md` with reference URLs, abstract takeaways, and how the final design differs.
+   - Supplied image → single-image recreation.
+   - Multiple supplied images → multi-image composition.
+   - Text-only request / original figure → description-driven design.
+   - Rendered preview image → preview QA.
+2. If images are involved, run Vision analysis first.
+   - Single-image / multi-image / preview QA: read `references/vision-planning-workflow.md` and produce `vision-analysis.md` (one analysis per source image for multi-image tasks) before writing `scene.json`.
+   - Vision only analyzes and plans; it does not render PPTX.
+3. If the task is description-driven, read `references/design-research-workflow.md` and produce a `Figure Design Plan` (`design-plan.md`) before writing `scene.json`.
+   - **Reference research (Nature / Science / design galleries) is opt-in, not default.** Trigger it only when the user explicitly says one of: "参考 / 灵感 / Nature 风 / Science 风 / 设计网站 / benchmark / find inspiration / look up references" or equivalent. Otherwise skip search and design from the user's description plus local knowledge.
+   - When research is triggered, extract only abstract patterns (hierarchy, layout grammar, color role, annotation strategy); never copy figures, icons, palettes, or layouts. Keep `inspiration-notes.md` with URLs and how the final design differs.
+   - If the user opted into a design plan, **do not call the renderer until the plan is approved**, unless the user said "直接生成 / no confirmation / skip plan".
 4. Preserve editability by default.
    - Use PowerPoint-native shapes, text, lines, curves, groups, components, gradients, transparency, and theme references wherever practical.
    - Generate or insert local PNG/SVG/EMF assets only for complex pictograms, equipment images, textures, and details that are not practical as native PPT shapes.
-5. Create a task folder in the current workspace, such as `output/<task-name>/`.
-   - Put Vision planning notes at `output/<task-name>/vision-analysis.md` when applicable.
-   - Put design planning notes at `output/<task-name>/design-plan.md` when applicable.
-   - Put inspiration notes at `output/<task-name>/inspiration-notes.md` when applicable.
-   - Put scene JSON at `output/<task-name>/scene.json`.
-   - Put generated or extracted assets under `output/<task-name>/assets/`.
-   - Put the final deck under `output/<task-name>/<task-name>.pptx`.
-   - Put preview exports under `output/<task-name>/preview.png` or `output/<task-name>/preview/`.
-6. Write `scene.json` using the v1 schema.
-   - Use logical canvas coordinates, normally `1280 x 720`; for portrait figures set both `canvas` and `page` to the desired ratio.
+5. Create a task folder under the project's `output/` directory.
+   - Path: `output/<slug>/`, where `<slug>` is a short kebab-case name derived from the user's request (e.g. `agent-workflow`, `chemcrow-figure`). Do **not** place artifacts in the project root.
+   - `output/<slug>/vision-analysis.md` (when applicable)
+   - `output/<slug>/design-plan.md` (when applicable)
+   - `output/<slug>/inspiration-notes.md` (when applicable)
+   - `output/<slug>/scene.json`
+   - `output/<slug>/assets/` for generated or extracted assets
+   - `output/<slug>/<slug>.pptx` for the final deck
+   - `output/<slug>/preview.png` (or `preview/` for multi-page exports)
+6. Write `scene.json` using the v1 schema (`references/scene-json-v1.md`).
+   - Default canvas: `1280 x 720`. For portrait figures set both `canvas` and `page` to the desired ratio.
    - Draw elements in z-order: lower layers first, foreground labels and icons last.
-   - Use `rect`, `ellipse`, `line`, `polyline`, `freeform`, `path`, and `text` for editable PPT content.
-   - Use `svg`, `emf`, or `vector` for local vector files; use `image` for raster files.
-   - Use `group`, `zIndex`, theme references, and built-in `component` elements for repeated diagram structure.
-   - Use `gradient`, `fillOpacity`, `strokeOpacity`, `rotation`, and `shadow` when visual fidelity requires them.
+   - Use `rect`, `ellipse`, `line`, `polyline`, `freeform`, `path`, `text` for editable content; `svg`/`emf`/`vector` for local vector files; `image` for raster.
+   - Use `group`, `zIndex`, theme references, and built-in `component` elements for repeated structure.
+   - **Follow the Typography Scale rules in `references/scene-json-v1.md` — font sizes must match canvas size; do not default to small fonts.**
    - Save JSON as UTF-8; the renderer reads UTF-8 strictly to avoid Chinese text, bullets, and symbols becoming mojibake.
-7. Render with PowerShell:
+7. Render with PowerShell (only after step 3's confirmation gate, if applicable):
 
 ```powershell
 .\scripts\Render-PptScene.ps1 `
@@ -98,33 +95,30 @@ Export a preview in the same COM session when visual QA is needed:
 ```
 
 9. Verify the output.
-   - Confirm the PPTX exists.
-   - Inspect the PPTX package for `ppt/slides/slide1.xml`.
-   - If using images, confirm `ppt/media/*` exists.
-   - Prefer `-ExportPreview` over a second PowerPoint COM run for previews.
-   - When a preview image is available, use Vision QA to identify missing elements, text mismatches, wrong arrows, layout drift, color drift, and raster/native-element mistakes.
+   - Confirm the `.pptx` file exists at the expected path.
+   - Prefer running with `-ExportPreview` and visually inspecting `preview.png` over zip inspection.
+   - Only when rendering fails or you suspect a packaging issue, inspect the PPTX package:
+     ```powershell
+     Add-Type -AssemblyName System.IO.Compression.FileSystem
+     [IO.Compression.ZipFile]::OpenRead('output\<slug>\<slug>.pptx').Entries | Select-Object FullName
+     ```
+     Expect `ppt/slides/slide1.xml` (and `ppt/media/*` if images were used).
+   - When a preview image is available, run Vision QA against the reference image or design plan: list missing elements, text mismatches, wrong arrows, layout drift, color drift, and font-size mismatches before rerendering.
 
-## Vision Analysis & Planning
+## Reference Pointers
 
-When the user supplies one or more images, or when a PPT preview image is available:
+Detailed rules live in the references; only consult them on demand:
 
-- Read `references/vision-planning-workflow.md`.
-- Produce `vision-analysis.md` before writing `scene.json` for image recreation or image composition tasks.
-- Identify visual elements, spatial layout, text labels, connectors, hierarchy, style, native-PPT mapping, generated asset candidates, and fidelity risks.
-- For multi-image composition, keep source provenance for each selected element and then define one unified visual system.
-- For preview QA, compare the preview against the planned structure and produce specific scene-level fixes.
-- Do not treat Vision output as exact geometry. Use it as structured planning, then refine coordinates and styles in `scene.json`.
+- `references/vision-planning-workflow.md` — image / preview tasks (analysis template, mapping rules, preview QA).
+- `references/design-research-workflow.md` — description-driven tasks (Figure Design Plan template, opt-in reference-research rules, originality guardrails).
+- `references/scene-json-v1.md` — JSON schema, coordinate system, **typography scale**, component catalog, error diagnosis.
 
-## Description-Driven Design
+Cross-cutting rules:
 
-When the user gives only a description, or asks for a new figure inspired by scientific/design examples:
-
-- Read `references/design-research-workflow.md`.
-- Produce a concise `Figure Design Plan` with goal, audience, core message, layout, visual hierarchy, color/font system, element inventory, native-PPT elements, generated/inserted assets, and render plan.
-- Wait for user confirmation before PPT rendering by default. If the user says "directly generate", "no confirmation", or equivalent, proceed and record that assumption.
-- If web access is unavailable, state that reference research was not performed and continue from the user's description plus local knowledge.
-- Use Vision only when the task also includes image inputs or when inspecting a rendered preview.
-- Do not place reference URLs in the final PPT unless the user asks for an appendix or audit trail.
+- Reference research (Nature/Science/design galleries) is **opt-in**; trigger keywords listed in step 3 above.
+- Do not place reference URLs in the final PPT unless the user asks for an appendix.
+- Vision outputs are structural planning, not exact geometry — refine coordinates in `scene.json`.
+- For description-driven tasks, the renderer runs **after** plan approval (step 7 gate).
 
 ## Image Composition Guidance
 
@@ -150,13 +144,9 @@ For repeated figure grammar:
 - Use `component.legendItem` for legend rows.
 - Use `component.bracket` and `component.flowArrow` for recurring framework connectors.
 
-## JSON Reference
-
-Read `references/scene-json-v1.md` when writing or debugging scene JSON. Load it especially when adding a new scene type, handling image assets, or diagnosing PowerPoint COM range/style errors.
-
 ## Smoke Test
 
-To test the skill's bundled renderer from the skill directory:
+From the skill directory (`skills/ppt-com-scene-renderer/`):
 
 ```powershell
 .\scripts\Render-PptScene.ps1 `
@@ -165,4 +155,4 @@ To test the skill's bundled renderer from the skill directory:
   -AssetRoot .\assets\sample
 ```
 
-Expected result: a one-slide editable PowerPoint grid diagram with an inserted PNG icon.
+Expected result: a one-slide editable PowerPoint grid diagram with an inserted PNG icon. From any other working directory, call the script by absolute path.
